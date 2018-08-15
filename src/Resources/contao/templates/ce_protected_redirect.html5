@@ -1,0 +1,27 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+    <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+
+            <?php if ($this->message): ?>
+                <p class="<?= $this->mclass ?>"><?= $this->message ?></p>
+            <?php endif; ?>
+
+            <div class="widget widget-text mandatory">
+                <label for="ctrl_redirectPassword_<?= $this->id ?>" class="invisible"><?= $this->protectedRedirectPasswordLabel ?></label>
+                <input type="password" name="redirectPassword" id="ctrl_redirectPassword_<?= $this->id ?>" class="text mandatory" value="" placeholder="<?= $this->protectedRedirectPasswordLabel ?>" required>
+            </div>
+
+            <?= $this->captcha ?>
+
+            <div class="widget widget-submit">
+                <button type="submit" class="submit"><?= $this->submit ?></button>
+            </div>
+        </div>
+    </form>
+
+<?php $this->endblock(); ?>

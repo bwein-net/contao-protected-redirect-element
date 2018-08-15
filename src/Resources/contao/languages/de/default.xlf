@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file datatype="php" original="src/Resources/contao/languages/de/default.xlf" source-language="en"
+          target-language="de">
+        <body>
+            <trans-unit id="CTE.protectedRedirect.0">
+                <source>Protected redirect</source>
+                <target>Geschützte Weiterleitung</target>
+            </trans-unit>
+            <trans-unit id="CTE.protectedRedirect.1">
+                <source>Protect redirect by a password</source>
+                <target>Weiterleitung durch ein Passwort schützen</target>
+            </trans-unit>
+            <trans-unit id="MSC.protectedRedirectPassword">
+                <source>Password</source>
+                <target>Passwort</target>
+            </trans-unit>
+            <trans-unit id="MSC.protectedRedirectUnlock">
+                <source>Unlock</source>
+                <target>Freischalten</target>
+            </trans-unit>
+            <trans-unit id="ERR.protectedRedirectInvalidPassword">
+                <source>Invalid password!</source>
+                <target>Ungültiges Passwort!</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

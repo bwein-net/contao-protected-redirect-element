@@ -1,0 +1,40 @@
+{
+    "name": "bwein-net/contao-protected-redirect-element",
+    "description": "Protected Redirect Element for Contao Open Source CMS",
+    "keywords": [
+        "contao",
+        "protected",
+        "redirect",
+        "element",
+        "content",
+        "password",
+        "download"
+    ],
+    "type": "contao-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "bwein.net",
+            "homepage": "https://bwein.net/"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "contao/core-bundle": "^4.4"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.12"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bwein\\ProtectedRedirectElement\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Bwein\\ProtectedRedirectElement\\ContaoManager\\Plugin"
+    }
+}
