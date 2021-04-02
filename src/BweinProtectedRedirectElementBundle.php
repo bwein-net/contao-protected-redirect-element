@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Protected Redirect Element for Contao Open Source CMS.
  *
@@ -14,4 +16,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class BweinProtectedRedirectElementBundle extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Bwein\ProtectedRedirectElement\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection}'

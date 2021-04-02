@@ -1,26 +1,26 @@
 <?xml version="1.0" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_content.xlf" source-language="en">
+    <file datatype="plaintext" original="tl_content.xlf" source-language="en" target-language="de">
         <body>
             <trans-unit id="tl_content.protectedRedirect_legend">
                 <source>Protected Redirect</source>
-                <target>Protected Redirect</target>
+                <target>Geschützte Weiterleitung</target>
             </trans-unit>
             <trans-unit id="tl_content.protectedRedirectPassword.0">
                 <source>Password for Redirect</source>
-                <target>Password for Redirect</target>
+                <target>Passwort für Weiterleitung</target>
             </trans-unit>
             <trans-unit id="tl_content.protectedRedirectPassword.1">
                 <source>Here you can set the password, which is validated before the redirect.</source>
-                <target>Here you can set the password, which is validated before the redirect.</target>
+                <target>Hier können Sie das Passwort setzen, welches vor der Weiterleitung abgefragt wird.</target>
             </trans-unit>
             <trans-unit id="tl_content.protectedRedirectDisableCaptcha.0">
                 <source>Disable the security question</source>
-                <target>Disable the security question</target>
+                <target>Sicherheitsfrage deaktivieren</target>
             </trans-unit>
             <trans-unit id="tl_content.protectedRedirectDisableCaptcha.1">
                 <source>Here you can disable the security question (not recommended).</source>
-                <target>Here you can disable the security question (not recommended).</target>
+                <target>Hier können Sie die Sicherheitsfrage abschalten (nicht empfohlen).</target>
             </trans-unit>
         </body>
     </file>
