@@ -57,7 +57,7 @@
     "contao-manager-plugin": "Bwein\\ProtectedRedirectElement\\ContaoManager\\Plugin"
   },
   "scripts": {
-    "cs-fixer": [
+    "ecs": [
       "vendor/bin/ecs check contao/ src/ --fix --ansi",
       "vendor/bin/ecs check contao/templates --config ecs_template.php --fix --ansi"
     ]
