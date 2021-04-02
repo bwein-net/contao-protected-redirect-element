@@ -18,6 +18,10 @@
       "homepage": "https://bwein.net/"
     }
   ],
+  "support": {
+    "issues": "https://github.com/bwein-net/contao-protected-redirect-element/issues",
+    "source": "https://github.com/bwein-net/contao-protected-redirect-element"
+  },
   "funding": [
     {
       "type": "github",
