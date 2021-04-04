@@ -59,7 +59,7 @@
   "scripts": {
     "ecs": [
       "vendor/bin/ecs check contao/ src/ --fix --ansi",
-      "vendor/bin/ecs check contao/templates --config ecs_template.php --fix --ansi"
+      "vendor/bin/ecs check contao/ src/ --config ecs_template.php --fix --ansi"
     ]
   }
 }
