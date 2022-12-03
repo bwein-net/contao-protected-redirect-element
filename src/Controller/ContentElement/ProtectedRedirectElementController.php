@@ -17,6 +17,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -33,13 +34,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ProtectedRedirectElementController extends AbstractContentElementController
 {
-    private $scopeMatcher;
-    private $translator;
+    private ScopeMatcher $scopeMatcher;
+    private TranslatorInterface $translator;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(ScopeMatcher $scopeMatcher, TranslatorInterface $translator)
+    public function __construct(ScopeMatcher $scopeMatcher, TranslatorInterface $translator, InsertTagParser $insertTagParser)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->translator = $translator;
+        $this->insertTagParser = $insertTagParser;
     }
 
     /**
@@ -133,7 +136,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
             throw new RedirectResponseException($model->url, 303);
         }
 
-        $url = Controller::replaceInsertTags($model->url);
+        $url = $this->insertTagParser->replace($model->url);
         Controller::redirect($url);
     }
 }
