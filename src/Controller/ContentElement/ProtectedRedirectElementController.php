@@ -19,6 +19,7 @@ use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FormCaptcha;
 use Contao\StringUtil;
 use Contao\Template;
@@ -41,7 +42,10 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         $this->translator = $translator;
     }
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    /**
+     * @param Template|FragmentTemplate $template
+     */
+    protected function getResponse($template, ContentModel $model, Request $request): Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->getBackendWildcard($template, $model);
@@ -70,7 +74,10 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         return $template->getResponse();
     }
 
-    protected function getBackendWildcard(Template $template, ContentModel $model): Response
+    /**
+     * @param Template|FragmentTemplate $template
+     */
+    protected function getBackendWildcard($template, ContentModel $model): Response
     {
         $wilcardTemplate = new BackendTemplate('be_wildcard');
         $wilcardTemplate->title = $template->headline;
@@ -79,7 +86,10 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         return new Response($wilcardTemplate->parse());
     }
 
-    protected function validateForm(Template $template, ContentModel $model, Request $request, ?Widget $widget = null): bool
+    /**
+     * @param Template|FragmentTemplate $template
+     */
+    protected function validateForm($template, ContentModel $model, Request $request, Widget $widget = null): bool
     {
         // Validate the password
         if ($model->protectedRedirectPassword !== $request->get('redirectPassword')) {
