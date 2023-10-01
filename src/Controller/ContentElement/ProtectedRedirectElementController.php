@@ -16,6 +16,7 @@ use Contao\BackendTemplate;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -37,12 +38,14 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
     private ScopeMatcher $scopeMatcher;
     private TranslatorInterface $translator;
     private InsertTagParser $insertTagParser;
+    private ContaoCsrfTokenManager $csrfTokenManager;
 
-    public function __construct(ScopeMatcher $scopeMatcher, TranslatorInterface $translator, InsertTagParser $insertTagParser)
+    public function __construct(ScopeMatcher $scopeMatcher, TranslatorInterface $translator, InsertTagParser $insertTagParser, ContaoCsrfTokenManager $csrfTokenManager)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->translator = $translator;
         $this->insertTagParser = $insertTagParser;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     /**
@@ -72,7 +75,8 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         $template->action = $request->getUri();
         $template->formId = $formId;
         $template->captcha = null !== $captchaWidget ? $captchaWidget->parse() : '';
-        $template->id = $model->id;
+        $template->id = $model->id;		
+        $template->requestToken = $this->csrfTokenManager->getDefaultTokenValue();
 
         return $template->getResponse();
     }
