@@ -17,10 +17,10 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FormCaptcha;
 use Contao\StringUtil;
@@ -30,22 +30,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @ContentElement("protectedRedirect", category="links", template="ce_protected_redirect")
- */
+#[AsContentElement('protectedRedirect', category: 'links', template: 'ce_protected_redirect')]
 class ProtectedRedirectElementController extends AbstractContentElementController
 {
-    private ScopeMatcher $scopeMatcher;
-    private TranslatorInterface $translator;
-    private InsertTagParser $insertTagParser;
-    private ContaoCsrfTokenManager $csrfTokenManager;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TranslatorInterface $translator, InsertTagParser $insertTagParser, ContaoCsrfTokenManager $csrfTokenManager)
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->translator = $translator;
-        $this->insertTagParser = $insertTagParser;
-        $this->csrfTokenManager = $csrfTokenManager;
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TranslatorInterface $translator,
+        private readonly InsertTagParser $insertTagParser,
+        private readonly ContaoCsrfTokenManager $csrfTokenManager,
+    ) {
     }
 
     /**
@@ -75,7 +68,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         $template->action = $request->getUri();
         $template->formId = $formId;
         $template->captcha = null !== $captchaWidget ? $captchaWidget->parse() : '';
-        $template->id = $model->id;		
+        $template->id = $model->id;
         $template->requestToken = $this->csrfTokenManager->getDefaultTokenValue();
 
         return $template->getResponse();
@@ -96,7 +89,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
     /**
      * @param Template|FragmentTemplate $template
      */
-    protected function validateForm($template, ContentModel $model, Request $request, Widget $widget = null): bool
+    protected function validateForm($template, ContentModel $model, Request $request, Widget|null $widget = null): bool
     {
         // Validate the password
         if ($model->protectedRedirectPassword !== $request->get('redirectPassword')) {
@@ -118,7 +111,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         return true;
     }
 
-    private function getCaptchaWidget(ContentModel $model): ?FormCaptcha
+    private function getCaptchaWidget(ContentModel $model): FormCaptcha|null
     {
         if ((bool) $model->protectedRedirectDisableCaptcha) {
             return null;
@@ -136,7 +129,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
 
     private function doRedirect(ContentModel $model): void
     {
-        if (0 === strpos($model->url, 'mailto:')) {
+        if (str_starts_with((string) $model->url, 'mailto:')) {
             throw new RedirectResponseException($model->url, 303);
         }
 
