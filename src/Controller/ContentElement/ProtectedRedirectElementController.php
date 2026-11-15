@@ -23,8 +23,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FormCaptcha;
-use Contao\StringUtil;
-use Contao\Template;
+use Contao\Input;
 use Contao\Widget;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,10 +40,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
     ) {
     }
 
-    /**
-     * @param Template|FragmentTemplate $template
-     */
-    protected function getResponse($template, ContentModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->getBackendWildcard($template, $model);
@@ -54,16 +50,12 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         $captchaWidget = $this->getCaptchaWidget($model);
 
         // Validate the form
-        if ($request->get('FORM_SUBMIT') === $formId) {
-            $varSubmitted = $this->validateForm($template, $model, $request, $captchaWidget);
-
-            if (false !== $varSubmitted) {
-                $this->doRedirect($model);
-            }
+        if ($request->request->get('FORM_SUBMIT') === $formId && $this->validateForm($template, $model, $captchaWidget)) {
+            $this->doRedirect($model);
         }
 
         // Default template variables
-        $template->submit = StringUtil::specialchars($this->translator->trans('MSC.protectedRedirectUnlock', [], 'contao_default'));
+        $template->submit = $this->translator->trans('MSC.protectedRedirectUnlock', [], 'contao_default');
         $template->protectedRedirectPasswordLabel = $this->translator->trans('MSC.protectedRedirectPassword', [], 'contao_default');
         $template->action = $request->getUri();
         $template->formId = $formId;
@@ -74,25 +66,21 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
         return $template->getResponse();
     }
 
-    /**
-     * @param Template|FragmentTemplate $template
-     */
-    protected function getBackendWildcard($template, ContentModel $model): Response
+    protected function getBackendWildcard(FragmentTemplate $template, ContentModel $model): Response
     {
-        $wilcardTemplate = new BackendTemplate('be_wildcard');
-        $wilcardTemplate->title = $template->headline;
-        $wilcardTemplate->wildcard .= '### '.$model->protectedRedirectPassword.' > <a href="'.$model->url.'" target="_blank">'.$model->url.'</a> ###';
+        // The wildcard is output as plain text (it is escaped in the Twig template)
+        $wildcardTemplate = new BackendTemplate('be_wildcard');
+        $wildcardTemplate->title = $template->headline;
+        $wildcardTemplate->wildcard = '### '.$model->protectedRedirectPassword.' > '.$model->url.' ###';
 
-        return new Response($wilcardTemplate->parse());
+        return new Response($wildcardTemplate->parse());
     }
 
-    /**
-     * @param Template|FragmentTemplate $template
-     */
-    protected function validateForm($template, ContentModel $model, Request $request, Widget|null $widget = null): bool
+    protected function validateForm(FragmentTemplate $template, ContentModel $model, Widget|null $widget = null): bool
     {
-        // Validate the password
-        if ($model->protectedRedirectPassword !== $request->get('redirectPassword')) {
+        // Input::post() applies the same input encoding as the back end form did
+        // when the password was saved (encoded in Contao 5, raw in Contao 6)
+        if (!hash_equals((string) $model->protectedRedirectPassword, (string) Input::post('redirectPassword'))) {
             $template->mclass = 'error';
             $template->message = $this->translator->trans('ERR.protectedRedirectInvalidPassword', [], 'contao_default');
 
@@ -133,7 +121,7 @@ class ProtectedRedirectElementController extends AbstractContentElementControlle
             throw new RedirectResponseException($model->url, 303);
         }
 
-        $url = $this->insertTagParser->replace($model->url);
-        Controller::redirect($url);
+        // Controller::redirect() makes relative URLs absolute and decodes "&amp;"
+        Controller::redirect($this->insertTagParser->replaceInline((string) $model->url));
     }
 }

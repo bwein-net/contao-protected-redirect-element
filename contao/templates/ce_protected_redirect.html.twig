@@ -1,0 +1,27 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    <form{% if action|default %} action="{{ action }}"{% endif %} id="{{ formId }}" method="post">
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+
+            {% if message|default %}
+                <p class="{{ mclass|default }}">{{ message }}</p>
+            {% endif %}
+
+            <div class="widget widget-text mandatory">
+                <label for="ctrl_redirectPassword_{{ id }}" class="invisible">{{ protectedRedirectPasswordLabel }}</label>
+                <input type="password" name="redirectPassword" id="ctrl_redirectPassword_{{ id }}" class="text mandatory" value="" placeholder="{{ protectedRedirectPasswordLabel }}" required>
+            </div>
+
+            {{ captcha|default|raw }}
+
+            <div class="widget widget-submit">
+                <button type="submit" class="submit">{{ submit }}</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
